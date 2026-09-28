@@ -1,0 +1,7 @@
+node_modules
+.nuxt
+.output
+package-lock.json
+*.log
+test-results
+playwright-report

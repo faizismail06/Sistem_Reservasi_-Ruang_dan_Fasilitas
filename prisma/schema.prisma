@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+model User {
+  id           String             @id @default(cuid())
+  name         String
+  email        String             @unique
+  passwordHash String
+  role         Role               @default(EMPLOYEE)
+  createdAt    DateTime           @default(now())
+  sessions     Session[]
+  reservations Reservation[]      @relation("Owner")
+  decisions    Reservation[]      @relation("DecisionMaker")
+  blocks       MaintenanceBlock[]
+  events       ReservationEvent[]
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}
+
+model Room {
+  id           String             @id @default(cuid())
+  name         String
+  location     String
+  capacity     Int
+  description  String
+  amenities    String[]
+  isActive     Boolean            @default(true)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  reservations Reservation[]
+  blocks       MaintenanceBlock[]
+}
+
+model Reservation {
+  id             String             @id @default(cuid())
+  roomId         String
+  room           Room               @relation(fields: [roomId], references: [id])
+  userId         String
+  user           User               @relation("Owner", fields: [userId], references: [id])
+  startAt        DateTime           @db.Timestamptz(3)
+  endAt          DateTime           @db.Timestamptz(3)
+  attendees      Int
+  purpose        String
+  status         Status             @default(PENDING)
+  decisionReason String?
+  decidedBy      String?
+  decider        User?              @relation("DecisionMaker", fields: [decidedBy], references: [id])
+  decidedAt      DateTime?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  events         ReservationEvent[]
+
+  @@index([roomId, startAt, endAt])
+  @@index([userId, createdAt])
+}
+
+model MaintenanceBlock {
+  id        String   @id @default(cuid())
+  roomId    String
+  room      Room     @relation(fields: [roomId], references: [id])
+  startAt   DateTime @db.Timestamptz(3)
+  endAt     DateTime @db.Timestamptz(3)
+  reason    String
+  createdBy String
+  creator   User     @relation(fields: [createdBy], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([roomId, startAt, endAt])
+}
+
+model ReservationEvent {
+  id            String      @id @default(cuid())
+  reservationId String
+  reservation   Reservation @relation(fields: [reservationId], references: [id])
+  actorId       String
+  actor         User        @relation(fields: [actorId], references: [id])
+  action        String
+  note          String?
+  createdAt     DateTime    @default(now())
+}

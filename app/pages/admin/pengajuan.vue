@@ -1,0 +1,1 @@
+<template><ReservationList admin /></template>

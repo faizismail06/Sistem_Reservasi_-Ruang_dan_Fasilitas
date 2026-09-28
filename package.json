@@ -1,0 +1,50 @@
+{
+  "name": "reservasi-kantor",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "postinstall": "prisma generate && nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "lint": "eslint .",
+    "test": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:e2e": "playwright test",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "node --env-file=.env --import tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@internationalized/date": "^3.8.0",
+    "@nuxt/ui": "4.11.2",
+    "@prisma/client": "6.19.0",
+    "argon2": "^0.44.0",
+    "h3": "^1.15.11",
+    "nuxt": "4.5.2",
+    "vue": "^3.5.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@iconify-json/lucide": "^1.2.0",
+    "@nuxt/eslint": "^1.9.0",
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.0.0",
+    "prettier": "^3.9.9",
+    "prisma": "6.19.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vitest": "4.1.11",
+    "vue-tsc": "^3.0.0"
+  },
+  "overrides": {
+    "@prisma/config": {
+      "deepmerge-ts": "8.0.2",
+      "effect": "3.22.2"
+    },
+    "esbuild": "^0.28.1"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
