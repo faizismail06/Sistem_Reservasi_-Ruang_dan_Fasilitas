@@ -14,3 +14,6 @@ playwright-report/
 /PRD*.md
 /DOKUMENTASI*.md
 /VALIDASI*.md
+
+# Local environment template
+.env.example
