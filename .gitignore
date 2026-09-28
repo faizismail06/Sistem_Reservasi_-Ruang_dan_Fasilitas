@@ -6,3 +6,11 @@ coverage/
 test-results/
 playwright-report/
 *.log
+
+# Local documentation (kept on disk, excluded from Git)
+/doc/
+/docs/
+/README.md
+/PRD*.md
+/DOKUMENTASI*.md
+/VALIDASI*.md
